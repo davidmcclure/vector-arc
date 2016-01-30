@@ -1,3 +1,4 @@
 
 ipython
+regex
 gensim

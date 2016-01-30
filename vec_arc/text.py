@@ -6,6 +6,20 @@ import regex
 class Text:
 
 
+    @classmethod
+    def from_file(cls, path):
+
+        """
+        Hydrate a text from a file.
+
+        Args:
+            path (str)
+        """
+
+        with open(path, 'r') as fh:
+            return cls(fh.read())
+
+
     def __init__(self, text):
 
         """
@@ -28,7 +42,7 @@ class Text:
 
         self.tokens = []
 
-        pattern = regex.finditer('\p{L}', self.text.lower())
+        pattern = regex.finditer('\p{L}+', self.text.lower())
 
         # TODO: stem?
 
