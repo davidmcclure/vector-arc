@@ -3,8 +3,9 @@
 import regex
 import numpy as np
 
-from itertools import islice, combinations
 from gensim.models import Word2Vec
+from itertools import islice, combinations, chain
+from clint.textui import progress
 
 
 # train a word2vec model
@@ -12,14 +13,14 @@ from gensim.models import Word2Vec
 # slide window across text
 
 
-def window(seq, n=2):
+def window(seq, n):
 
     """
     Yield a sliding window over an iterable.
 
     Args:
         seq (iter): The sequence.
-        n (int): The window width.
+        n (int): Window width.
 
     Yields:
         tuple: The next window.
@@ -34,6 +35,23 @@ def window(seq, n=2):
     for token in it:
         result = result[1:] + (token,)
         yield result
+
+
+def chunks(seq, n):
+
+    """
+    Yield "groups" from an iterable.
+
+    Args:
+        seq (iter): The iterable.
+        n (int): Chunk size.
+
+    Yields:
+        The next chunk.
+    """
+
+    for i in range(0, len(seq), n):
+        yield seq[i:i+n]
 
 
 class Text:
@@ -98,6 +116,26 @@ class Text:
 
         return series
 
+    def mean_cosine_chunks(self, model, n=1000):
+
+        """
+        Get the mean pairwise similarities for token chunks
+
+        Args:
+            model (Model)
+            n (int) - Chunk size.
+
+        Returns: list
+        """
+
+        series = []
+
+        for i, w in enumerate(chunks(self.tokens, n)):
+            series.append(model.mean_cosine(w))
+            print(i)
+
+        return series
+
 
 class Model(Word2Vec):
 
@@ -136,6 +174,6 @@ class Model(Word2Vec):
 
         for t1, t2 in combinations(tokens, 2):
             if t1 in self and t2 in self:
-                distance.append(self.similarity(t1, t2))
+                distances.append(self.similarity(t1, t2))
 
         return np.mean(distances)
