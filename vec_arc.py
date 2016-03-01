@@ -3,8 +3,8 @@
 import regex
 import numpy as np
 
+from itertools import islice, combinations
 from gensim.models import Word2Vec
-from itertools import islice
 
 
 # train a word2vec model
@@ -120,3 +120,22 @@ class Model(Word2Vec):
         mean = sum(vectors) / len(vectors)
 
         return np.linalg.norm(mean)
+
+    def mean_cosine(self, tokens):
+
+        """
+        Compute the average cosine similarity between all pairs of tokens.
+
+        Args:
+            tokens (list)
+
+        Returns: float
+        """
+
+        distances = []
+
+        for t1, t2 in combinations(tokens, 2):
+            if t1 in self and t2 in self:
+                distance.append(self.similarity(t1, t2))
+
+        return np.mean(distances)
