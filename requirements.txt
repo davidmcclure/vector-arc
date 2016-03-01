@@ -2,4 +2,6 @@
 ipython
 regex
 gensim
+matplotlib
 clint
+stop-words

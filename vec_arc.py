@@ -6,11 +6,7 @@ import numpy as np
 from gensim.models import Word2Vec
 from itertools import islice, combinations, chain
 from clint.textui import progress
-
-
-# train a word2vec model
-# given a set of words, compute a "breadth" metric
-# slide window across text
+from stop_words import get_stop_words
 
 
 def window(seq, n):
@@ -92,10 +88,17 @@ class Text:
 
         pattern = regex.finditer('\p{L}+', self.text.lower())
 
+        stopwords = get_stop_words('en')
+
         # TODO: stem?
 
         for match in pattern:
-            self.tokens.append(match.group(0))
+
+            token = match.group(0)
+
+            # Exclude stop words.
+            if token not in stopwords:
+                self.tokens.append(match.group(0))
 
     def mean_norm_series(self, model, n=1000):
 
