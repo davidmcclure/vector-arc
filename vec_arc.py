@@ -3,8 +3,12 @@
 import regex
 
 
-class Text:
+# train a word2vec model
+# given a set of words, compute a "breadth" metric
+# slide window across text
 
+
+class Text:
 
     @classmethod
     def from_file(cls, path):
@@ -19,7 +23,6 @@ class Text:
         with open(path, 'r') as fh:
             return cls(fh.read())
 
-
     def __init__(self, text):
 
         """
@@ -32,7 +35,6 @@ class Text:
         self.text = text
 
         self.tokenize()
-
 
     def tokenize(self):
 
